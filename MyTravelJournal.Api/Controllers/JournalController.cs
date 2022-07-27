@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using Microsoft.AspNetCore.Mvc;
 using MyTravelJournal.Api.Models;
 
@@ -23,6 +24,13 @@ public class JournalController : Controller
     [HttpGet]
     public async Task<ActionResult<List<Journal>>> GetAllJournals()
     {
+        return Ok(_journals);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<List<Journal>>> AddJournal([FromBody] Journal newData)
+    {
+        _journals.Add(newData);
         return Ok(_journals);
     }
 }
