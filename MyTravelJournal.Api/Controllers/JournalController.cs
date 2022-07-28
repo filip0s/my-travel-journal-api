@@ -31,6 +31,6 @@ public class JournalController : Controller
     public async Task<ActionResult<List<Journal>>> AddJournal([FromBody] Journal newData)
     {
         _journals.Add(newData);
-        return Ok(_journals);
+        return Ok("Journal successfully added");
     }
 }
