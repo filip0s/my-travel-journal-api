@@ -2,17 +2,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-
 // CORS Policy setup
 var AllowedOriginPolicy = "_MyLocalhostPolicy";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
         name: AllowedOriginPolicy,
-        policy =>
-        {
-            policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
-        }
+        policy => { policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); }
     );
 });
 
