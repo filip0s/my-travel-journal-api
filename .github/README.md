@@ -26,7 +26,7 @@ download [here](https://dotnet.microsoft.com/en-us/download).
 
 | Method | `GET`           |
 |--------|-----------------|
-| URL    | `/api/journal` |
+| URL    | `/api/journal`  |
 
 Responds with array of all logs in the in-memory "database" (real database is TBA)
 
@@ -73,7 +73,7 @@ curl -X 'GET' \
 
 ```json
 {
-  "id": 1,
+  "id": 0,
   "title": "string",
   "description": "string",
   "location": "string",
