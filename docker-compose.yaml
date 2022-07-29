@@ -1,0 +1,19 @@
+version: '3'
+services:
+  database:
+    image: "postgres:alpine"
+    restart: "always"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "filip"
+      POSTGRES_PASSWORD: "keyboard-cat"
+      POSTGRES_DB: "journal-db"
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data/
+  
+  adminer:
+    image: "adminer"
+    restart: "always"
+    ports:
+      - "8080:8080"
