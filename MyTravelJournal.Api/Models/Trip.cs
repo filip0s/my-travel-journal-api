@@ -1,6 +1,6 @@
 namespace MyTravelJournal.Api.Models;
 
-public class Journal
+public class Trip
 {
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
