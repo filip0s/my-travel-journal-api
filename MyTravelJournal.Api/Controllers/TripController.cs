@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MyTravelJournal.Api.Data;
 using MyTravelJournal.Api.Models;
 
 namespace MyTravelJournal.Api.Controllers;
@@ -7,36 +9,27 @@ namespace MyTravelJournal.Api.Controllers;
 [Route("/api/trip")]
 public class TripController : ControllerBase
 {
-    // In-memory database
-    private static List<Trip> _trips = new List<Trip>
+    private readonly TravelJournalContext _context;
+
+    public TripController(TravelJournalContext context)
     {
-        new Trip
-        {
-            Id = 0,
-            Title = "Mount Fuji",
-            Description = "Our trip to Japan ^^",
-            Location = "Japan",
-            Start = new DateTime(2022, 5, 24),
-            End = new DateTime(2022, 5, 27),
-        }
-    };
+        _context = context;
+    }
 
     [HttpGet]
     public async Task<ActionResult<List<Trip>>> GetAllTrips()
     {
-        return Ok(_trips);
+        return Ok(await _context.Trips.ToListAsync());
     }
 
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Trip>> GetTripById(int id)
     {
-        var foundTrip = _trips.FirstOrDefault(trip => trip.Id == id);
+        var foundTrip = await _context.Trips.FirstOrDefaultAsync(trip => trip.Id == id);
 
         if (foundTrip is null)
-        {
             return NotFound($"Trip with ID {id} was not found");
-        }
 
         return Ok(foundTrip);
     }
@@ -44,19 +37,18 @@ public class TripController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> AddTrip([FromBody] Trip newData)
     {
-        _trips.Add(newData);
+        _context.Trips.Add(newData);
+        await _context.SaveChangesAsync();
         return Ok("Trip successfully added");
     }
 
     [HttpPatch]
     public async Task<ActionResult> UpdateTripById(int id, [FromBody] Trip updatedData)
     {
-        var foundTrip = _trips.FirstOrDefault(trip => trip.Id == id);
+        var foundTrip = await _context.Trips.FindAsync(id);
 
         if (foundTrip is null)
-        {
             return NotFound($"Trip with id {id} was not found.");
-        }
 
         foundTrip.Title = updatedData.Title;
         foundTrip.Description = updatedData.Description;
@@ -64,20 +56,20 @@ public class TripController : ControllerBase
         foundTrip.Start = updatedData.Start;
         foundTrip.End = updatedData.End;
 
+        await _context.SaveChangesAsync();
         return Ok($"Trip data (id {id}) sucessfully updated.");
     }
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteTripById(int id)
     {
-        var foundTrip = _trips.Find(trip => trip.Id == id);
+        var foundTrip = await _context.Trips.FindAsync(id);
 
         if (foundTrip is null)
-        {
             return NotFound($"Trip with id {id} was not found");
-        }
 
-        _trips.Remove(foundTrip);
+        _context.Trips.Remove(foundTrip);
+        await _context.SaveChangesAsync();
 
         return Ok($"Trip with id {id} sucessfully deleted");
     }
