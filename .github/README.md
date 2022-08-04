@@ -7,13 +7,26 @@ for [Client-side application](https://github.com/filip0s/my-travel-journal-web) 
 
 ### Prerequisites
 
-For running the project you will need .NET 6 Runtime, which is available to
-download [here](https://dotnet.microsoft.com/en-us/download).
+- For building the project you will need [.NET 6 runtime](https://dotnet.microsoft.com/en-us/download).
+- [Docker](https://docs.docker.com/desktop/install/linux-install/) is needed for running the Postgres database image
 
-- On Fedora you can run `sudo dnf install dotnet` to install the officially maintained package.
+### Preparation
+1. To spin up database image, navigate into repo root directory and run `docker compose up` command
+2. For database migration you have to have Entity Framework tool
+    - If you don't already have it, you can install it by running `dotnet tool install --global dotnet-ef`
+3. You can then proceed in database migration by:
+```shell
+# When you are in repo root (my-travel-journal-api/) you either have to:
+#   - change directory into MyTravelJournal.Api/
+#   - specify project location with the `--project [location]`
+#     as seen below
+dotnet ef migrations add Init --project MyTravelJournal.Api/
+dotnet ef database update
+```
 
 
 ### Running
+After preparation is done, you can run the project with the 
 `dotnet run`
 
 ## API Endpoints
@@ -28,7 +41,7 @@ download [here](https://dotnet.microsoft.com/en-us/download).
 |--------|-----------------|
 | URL    | `/api/journal`  |
 
-Responds with array of all logs in the in-memory "database" (real database is TBA)
+Responds with array of all logs in the database 
 
 <details>
 <summary>Example request</summary>
@@ -48,7 +61,7 @@ curl -X 'GET' \
 ```json
 [
   {
-    "id": 0,
+    "id": 1,
     "title": "Mount Fuji",
     "description": "Our trip to Japan",
     "location": "Japan",
