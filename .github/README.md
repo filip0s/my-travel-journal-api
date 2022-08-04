@@ -11,10 +11,12 @@ for [Client-side application](https://github.com/filip0s/my-travel-journal-web) 
 - [Docker](https://docs.docker.com/desktop/install/linux-install/) is needed for running the Postgres database image
 
 ### Preparation
+
 1. To spin up database image, navigate into repo root directory and run `docker compose up` command
 2. For database migration you have to have Entity Framework tool
     - If you don't already have it, you can install it by running `dotnet tool install --global dotnet-ef`
 3. You can then proceed in database migration by:
+
 ```shell
 # When you are in repo root (my-travel-journal-api/) you either have to:
 #   - change directory into MyTravelJournal.Api/
@@ -24,31 +26,31 @@ dotnet ef migrations add Init --project MyTravelJournal.Api/
 dotnet ef database update
 ```
 
-
 ### Running
-After preparation is done, you can run the project with the 
+
+After preparation is done, you can run the project with the
 `dotnet run`
 
 ## API Endpoints
 
 - If running the project in the Development mode, you can use Swagger UI to overview API endpoints
 
-### Journals
+### Trips
 
-#### [GET] All Journals
+#### [GET] All Trips
 
-| Method | `GET`           |
-|--------|-----------------|
-| URL    | `/api/journal`  |
+| Method | `GET`       |
+|--------|-------------|
+| URL    | `/api/trip` |
 
-Responds with array of all logs in the database 
+Responds with array of all trip logs in the database
 
 <details>
 <summary>Example request</summary>
 
 ```bash
 curl -X 'GET' \
-  'https://localhost:7258/api/journal' \
+  'https://localhost:7258/api/trip' \
   -H 'accept: text/plain'
 
 ```
@@ -67,19 +69,67 @@ curl -X 'GET' \
     "location": "Japan",
     "start": "2022-05-24T00:00:00",
     "end": "2022-05-27T00:00:00"
+  },
+  {
+    "id": 2,
+    "title": "Whole day on the beach",
+    "description": "I've finally been to LA, so it was a MUST to go to Venice",
+    "location": "Venice Beach, CA",
+    "start": "2022-08-04T13:07:57.827Z",
+    "end": "2022-08-04T13:07:57.827Z"
   }
 ]
 ```
 
 </details>
 
-#### [POST] Create new journal log
+---
 
-| Method | `POST`         |
-|--------|----------------|
-| URL    | `/api/journal` |
+#### [GET] Get Trip By ID
 
- Adds new travel log with the data specified inside of the request body
+| Method | `GET`            |
+|--------|------------------|
+| URL    | `/api/trip/{id}` |
+
+Fetches single trip log, which is selected by its ID
+
+<details>
+<summary>Example cURL request</summary>
+
+```bash
+curl -X 'GET' \
+  'https://localhost:7258/api/trip/2' \
+  -H 'accept: text/plain'
+```
+
+</details>
+
+<details>
+<summary>Example Response (<code>200 OK</code>)</summary>
+
+```bash
+
+{
+  "id": 2,
+  "title": "Whole day on the beach",
+  "description": "I've finally been to LA, so it was a MUST to go to Venice",
+  "location": "Venice Beach, CA",
+  "start": "2022-08-04T13:07:57.827Z",
+  "end": "2022-08-04T13:07:57.827Z"
+}
+```
+
+</details>
+
+---
+
+#### [POST] Create New Trip Log
+
+| Method | `POST`      |
+|--------|-------------|
+| URL    | `/api/trip` |
+
+Adds new travel log with the data specified inside of the request body
 
 <details>
 <summary>Example request body</summary>
@@ -95,8 +145,10 @@ curl -X 'GET' \
 }
 ```
 
-Note that the `start` and `end` attribute which are type of `DateTime` should be
-in [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601)
+> value of the `id` field does not matter because database assigns its own id.
+
+> Note that the `start` and `end` attribute which are type of `DateTime` should be
+> in [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601)
 
 </details>
 <details>
@@ -104,18 +156,16 @@ in [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601)
 
 ```bash
 curl -X 'POST' \
-  'https://localhost:7258/api/journal' \
-  -H 'accept: text/plain' \
+  'https://localhost:7258/api/trip' \
+  -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
-  "id": 0,
-  "title": "string",
-  "description": "string",
-  "location": "string",
-  "start": "2022-07-28T18:37:48.572Z",
-  "end": "2022-07-28T18:37:48.572Z"
+  "title": "Whole day on the beach",
+  "description": "I'\''ve finally been to LA, so it was a MUST to go to Venice",
+  "location": "Venice Beach, CA",
+  "start": "2022-08-04T13:07:57.827Z",
+  "end": "2022-08-04T13:07:57.827Z"
 }'
-
 ```
 
 </details>
@@ -126,12 +176,84 @@ curl -X 'POST' \
 ```text
 Journal successfully added
 ```
+
 </details>
 
+---
 
+#### [PATCH] Update Trip By ID
+
+| Method | `PATCH`          |
+|--------|------------------|
+| URL    | `/api/trip/{id}` |
+
+Updates information about trip, which is specified by ID
+
+<details>
+<summary>Example cURL request</summary>
+
+```bash
+curl -X 'PATCH' \
+  'https://localhost:7258/api/trip/2' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "id": 2,
+    "title": "Whole day on the beach",
+    "description": "I'\''ve finally been to LA, so it was a MUST to go to Santa Monica",
+    "location": "Santa Monica, CA",
+    "start": "2022-08-04T13:07:57.827Z",
+    "end": "2022-08-04T13:07:57.827Z"
+  }'
+  
+```
+
+> Please be wary of the fact that the value of the `id` field in the request
+> JSON does not matter. `id` is only specified by value passed in the URL
+
+</details>
+
+<details>
+<summary>Example Response (<code>200 OK</code>)</summary>
+
+```text
+Trip data (id 2) successfully updated.
+```
+
+</details>
+
+---
+
+#### [DELETE] Delete Trip By ID
+
+| Method | `DELETE`         |
+|--------|------------------|
+| URL    | `/api/trip/{id}` |
+
+Deletes trip log, which is specified by its ID
+
+<details>
+<summary>Example cURL request</summary>
+
+```bash
+curl -X 'DELETE' \
+  'https://localhost:7258/api/trip/1' \
+  -H 'accept: */*'
+```
+
+</details>
+
+<details>
+<summary>Example Response (<code>200 OK</code>)</summary>
+
+```text
+Trip with id 1 sucessfully deleted
+```
+
+</details>
 
 ## Used technologies
 
-- **API framework:** ASP.NET  6
+- **API framework:** ASP.NET 6
 - **ORM:** Entity Framework
 - **Database:** PostgreSQL
