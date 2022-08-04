@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyTravelJournal.Api.Data;
+using MyTravelJournal.Api.DTOs;
 using MyTravelJournal.Api.Models;
 
 namespace MyTravelJournal.Api.Controllers;
@@ -43,7 +44,7 @@ public class TripController : ControllerBase
     }
 
     [HttpPatch]
-    public async Task<ActionResult> UpdateTripById(int id, [FromBody] Trip updatedData)
+    public async Task<ActionResult> UpdateTripById(int id, [FromBody] TripUpdateDto updatedData)
     {
         var foundTrip = await _context.Trips.FindAsync(id);
 
