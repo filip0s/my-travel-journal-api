@@ -119,5 +119,6 @@ Journal successfully added
 
 ## Used technologies
 
-- **Framework:** ASP.NET Web Api
+- **API framework:** ASP.NET  6
+- **ORM:** Entity Framework
 - **Database:** PostgreSQL
