@@ -43,7 +43,7 @@ public class TripController : ControllerBase
         return Ok("Trip successfully added");
     }
 
-    [HttpPatch]
+    [HttpPatch("{id:int}")]
     public async Task<ActionResult> UpdateTripById(int id, [FromBody] TripUpdateDto updatedData)
     {
         var foundTrip = await _context.Trips.FindAsync(id);
