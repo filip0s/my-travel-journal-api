@@ -10,11 +10,12 @@ services:
       POSTGRES_PASSWORD: "keyboard-cat"
       POSTGRES_DB: "journal-db"
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
-
-
+      - ./.pgdata:/var/lib/postgres
   adminer:
     image: "adminer"
     restart: "always"
     ports:
       - "8080:8080"
+
+volumes:
+  postgres:
