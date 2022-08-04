@@ -11,25 +11,35 @@ for [Client-side application](https://github.com/filip0s/my-travel-journal-web) 
 - [Docker](https://docs.docker.com/desktop/install/linux-install/) is needed for running the Postgres database image
 
 ### Preparation
-
-1. To spin up database image, navigate into repo root directory and run `docker compose up` command
-2. For database migration you have to have Entity Framework tool
-    - If you don't already have it, you can install it by running `dotnet tool install --global dotnet-ef`
-3. You can then proceed in database migration by:
+Just copy commands below into your terminal
 
 ```shell
-# When you are in repo root (my-travel-journal-api/) you either have to:
-#   - change directory into MyTravelJournal.Api/
-#   - specify project location with the `--project [location]`
-#     as seen below
-dotnet ef migrations add Init --project MyTravelJournal.Api/
+# Clone the repo
+git clone git@github.com:filip0s/my-travel-journal-api.git
+
+# Change into repo root
+cd my-travel-journal-api
+
+# Spin up database image in docker
+docker compose up -d
+
+# Install Entity Framework tool
+dotnet tool install --global dotnet-ef
+
+# Change into API project directory
+cd MyTravelJournal.Api
+
+# Database migration
+dotnet ef migrations add InitialMigration
 dotnet ef database update
 ```
 
 ### Running
+After everything form the section above is done, you can just run the project.
 
-After preparation is done, you can run the project with the
-`dotnet run`
+```shell
+dotnet run
+```
 
 ## API Endpoints
 
@@ -48,7 +58,7 @@ Responds with array of all trip logs in the database
 <details>
 <summary>Example request</summary>
 
-```bash
+```shell
 curl -X 'GET' \
   'https://localhost:7258/api/trip' \
   -H 'accept: text/plain'
@@ -96,7 +106,7 @@ Fetches single trip log, which is selected by its ID
 <details>
 <summary>Example cURL request</summary>
 
-```bash
+```shell
 curl -X 'GET' \
   'https://localhost:7258/api/trip/2' \
   -H 'accept: text/plain'
@@ -107,7 +117,7 @@ curl -X 'GET' \
 <details>
 <summary>Example Response (<code>200 OK</code>)</summary>
 
-```bash
+```shell
 
 {
   "id": 2,
@@ -154,7 +164,7 @@ Adds new travel log with the data specified inside of the request body
 <details>
 <summary>Example cURL request</summary>
 
-```bash
+```shell
 curl -X 'POST' \
   'https://localhost:7258/api/trip' \
   -H 'accept: */*' \
@@ -192,7 +202,7 @@ Updates information about trip, which is specified by ID
 <details>
 <summary>Example cURL request</summary>
 
-```bash
+```shell
 curl -X 'PATCH' \
   'https://localhost:7258/api/trip/2' \
   -H 'accept: */*' \
@@ -235,7 +245,7 @@ Deletes trip log, which is specified by its ID
 <details>
 <summary>Example cURL request</summary>
 
-```bash
+```shell
 curl -X 'DELETE' \
   'https://localhost:7258/api/trip/1' \
   -H 'accept: */*'
