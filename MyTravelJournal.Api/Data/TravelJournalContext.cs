@@ -14,5 +14,5 @@ public class TravelJournalContext : DbContext
         modelBuilder.UseSerialColumns();
     }
 
-    public DbSet<Trip> Trips { get; set; }
+    public DbSet<Trip> Trips { get; set; } = null!;
 }
