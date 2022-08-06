@@ -42,6 +42,12 @@ public class UserController : ControllerBase
     }
 
 
+    /// <summary>
+    /// Creates password hash from supplied plain-text password and also generates salt
+    /// </summary>
+    /// <param name="password">Password string in plain-text form</param>
+    /// <param name="passwordHash">Output parameter for hash computed from password</param>
+    /// <param name="passwordSalt">Output parameter for generated salt</param>
     private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {
         using var hmac = new HMACSHA512();
