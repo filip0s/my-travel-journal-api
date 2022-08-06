@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
 using MyTravelJournal.Api.Data;
+using MyTravelJournal.Api.DTOs;
 using MyTravelJournal.Api.Models;
 
 namespace MyTravelJournal.Api.Controllers;
@@ -17,13 +18,27 @@ public class UserController : ControllerBase
 
 
     [HttpPost("/register")]
-    public async Task<IActionResult> Register(User request)
+    public async Task<IActionResult> Register(UserRegisterRequestDto request)
     {
         if (_context.Users.Any(user => user.Username == request.Username))
             return BadRequest($"Username {request.Username} is already taken!");
 
 
-        return Ok();
+        CreatePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
+
+        var user = new User()
+        {
+            Username = request.Username,
+            PasswordHash = passwordHash,
+            PasswordSalt = passwordSalt
+        };
+
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+
+        return Ok($"User {user.Username} has been registered");
     }
 
 
