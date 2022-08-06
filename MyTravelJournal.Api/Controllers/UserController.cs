@@ -17,7 +17,7 @@ public class UserController : ControllerBase
     }
 
 
-    [HttpPost("/register")]
+    [HttpPost("/api/register")]
     public async Task<IActionResult> Register(UserRegisterRequestDto request)
     {
         if (_context.Users.Any(user => user.Username == request.Username))
