@@ -15,4 +15,5 @@ public class TravelJournalContext : DbContext
     }
 
     public DbSet<Trip> Trips { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
 }
