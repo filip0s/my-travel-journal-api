@@ -27,7 +27,7 @@ public class TripController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Trip>> GetTripById(int id)
     {
-        var foundTrip = await _context.Trips.FirstOrDefaultAsync(trip => trip.Id == id);
+        var foundTrip = await _context.Trips.FirstOrDefaultAsync(trip => trip.TripId == id);
 
         if (foundTrip is null)
             return NotFound($"Trip with ID {id} was not found");
