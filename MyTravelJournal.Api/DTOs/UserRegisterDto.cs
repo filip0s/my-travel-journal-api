@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyTravelJournal.Api.DTOs;
 
-public class UserRegisterRequestDto
+public class UserRegisterDto
 {
     [Required] public string Username { get; set; } = string.Empty;
 
