@@ -23,7 +23,6 @@ public class UserController : ControllerBase
         if (_context.Users.Any(user => user.Username == request.Username))
             return BadRequest($"Username {request.Username} is already taken!");
 
-
         CreatePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
 
         var user = new User()
@@ -33,10 +32,8 @@ public class UserController : ControllerBase
             PasswordSalt = passwordSalt
         };
 
-
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
-
 
         return Ok($"User {user.Username} has been registered");
     }
