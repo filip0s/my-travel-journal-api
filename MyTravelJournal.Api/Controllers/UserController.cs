@@ -12,7 +12,7 @@ public class UserController : ControllerBase
     private readonly TravelJournalContext _context;
     private readonly IMapper _mapper;
 
-    public UserController(TravelJournalContext context)
+    public UserController(TravelJournalContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
