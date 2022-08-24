@@ -13,13 +13,14 @@ builder.Services.AddDbContext<TravelJournalContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddCors(options => options.AddPolicy(name: "MyTravelJournalOrigins",
     policy => policy
         .WithOrigins("http://localhost:3001")
         .AllowAnyHeader()
         .AllowAnyMethod()
 ));
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 
 var app = builder.Build();
 

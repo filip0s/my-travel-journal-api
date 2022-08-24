@@ -10,10 +10,12 @@ namespace MyTravelJournal.Api.Controllers;
 public class UserController : ControllerBase
 {
     private readonly TravelJournalContext _context;
+    private readonly IMapper _mapper;
 
     public UserController(TravelJournalContext context)
     {
         _context = context;
+        _mapper = mapper;
     }
 
 
