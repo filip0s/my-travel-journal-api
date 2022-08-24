@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MyTravelJournal.Api.Data;
 using MyTravelJournal.Api.DTOs;
@@ -20,24 +21,23 @@ public class UserController : ControllerBase
 
 
     [HttpPost("/api/register")]
-    public async Task<IActionResult> Register(UserRegisterRequestDto request)
+    public async Task<IActionResult> Register(UserRegisterDto request)
     {
         if (_context.Users.Any(user => user.Username == request.Username))
             return BadRequest($"Username {request.Username} is already taken!");
 
         CreatePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
 
-        var user = new User()
-        {
-            Username = request.Username,
-            PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt
-        };
+        var newUser = _mapper.Map<User>(request);
 
-        _context.Users.Add(user);
+        // Manually setting password hash and salt for auto-mapped user
+        newUser.PasswordHash = passwordHash;
+        newUser.PasswordSalt = passwordSalt;
+
+        _context.Users.Add(newUser);
         await _context.SaveChangesAsync();
 
-        return Ok($"User {user.Username} has been registered");
+        return Ok($"User {newUser.Username} has been registered");
     }
 
 
