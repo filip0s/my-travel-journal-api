@@ -58,7 +58,7 @@ public class TripController : ControllerBase
         foundTrip.End = updatedData.End;
 
         await _context.SaveChangesAsync();
-        return Ok($"Trip data (id {id}) sucessfully updated.");
+        return Ok($"Trip data (id {id}) successfully updated.");
     }
 
     [HttpDelete("{id:int}")]
@@ -72,6 +72,6 @@ public class TripController : ControllerBase
         _context.Trips.Remove(foundTrip);
         await _context.SaveChangesAsync();
 
-        return Ok($"Trip with id {id} sucessfully deleted");
+        return Ok($"Trip with id {id} successfully deleted");
     }
 }
