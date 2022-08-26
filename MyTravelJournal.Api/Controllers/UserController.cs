@@ -41,6 +41,12 @@ public class UserController : ControllerBase
     }
 
 
+    [HttpPost("/api/login")]
+    public async Task<IActionResult> Login(UserLoginDto request)
+    {
+        return Ok("");
+    }
+
     /// <summary>
     /// Creates password hash from supplied plain-text password and also generates salt
     /// </summary>
