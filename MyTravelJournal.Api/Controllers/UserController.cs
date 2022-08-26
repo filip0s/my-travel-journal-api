@@ -29,16 +29,15 @@ public class UserController : ControllerBase
 
         CreatePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
 
-        var newUser = _mapper.Map<User>(request);
-
+        var createdUser = _mapper.Map<User>(request);
         // Manually setting password hash and salt for auto-mapped user
-        newUser.PasswordHash = passwordHash;
-        newUser.PasswordSalt = passwordSalt;
+        createdUser.PasswordHash = passwordHash;
+        createdUser.PasswordSalt = passwordSalt;
 
-        _context.Users.Add(newUser);
+        _context.Users.Add(createdUser);
         await _context.SaveChangesAsync();
 
-        return Ok($"User {newUser.Username} has been registered");
+        return Ok($"User {createdUser.Username} has been registered");
     }
 
 
@@ -46,15 +45,15 @@ public class UserController : ControllerBase
     public async Task<IActionResult> Login(UserLoginDto request)
     {
         // Searching for user in database by his username.
-        var foundUser = await _context.Users.FirstOrDefaultAsync(user => user.Username == request.Username);
-        if (foundUser is null)
+        var userFromDatabase = await _context.Users.FirstOrDefaultAsync(user => user.Username == request.Username);
+        if (userFromDatabase is null)
             return NotFound("User not found.");
 
         // Checks if the provided password corresponds to hash stored in the database.
-        if (!VerifyPasswordHash(request.Password, foundUser.PasswordHash, foundUser.PasswordSalt))
+        if (!VerifyPasswordHash(request.Password, userFromDatabase.PasswordHash, userFromDatabase.PasswordSalt))
             return NotFound("Incorrect password");
 
-        return Ok($"User {foundUser.Username} successfully logged in.");
+        return Ok($"User {userFromDatabase.Username} successfully logged in.");
     }
 
     /// <summary>

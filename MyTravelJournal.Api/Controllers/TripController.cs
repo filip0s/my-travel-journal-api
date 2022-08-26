@@ -27,12 +27,12 @@ public class TripController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Trip>> GetTripById(int id)
     {
-        var foundTrip = await _context.Trips.FirstOrDefaultAsync(trip => trip.TripId == id);
+        var tripFromDatabase = await _context.Trips.FirstOrDefaultAsync(trip => trip.TripId == id);
 
-        if (foundTrip is null)
+        if (tripFromDatabase is null)
             return NotFound($"Trip with ID {id} was not found");
 
-        return Ok(foundTrip);
+        return Ok(tripFromDatabase);
     }
 
     [HttpPost]
@@ -46,16 +46,16 @@ public class TripController : ControllerBase
     [HttpPatch("{id:int}")]
     public async Task<ActionResult> UpdateTripById(int id, [FromBody] TripUpdateDto updatedData)
     {
-        var foundTrip = await _context.Trips.FindAsync(id);
+        var tripFromDatabase = await _context.Trips.FindAsync(id);
 
-        if (foundTrip is null)
+        if (tripFromDatabase is null)
             return NotFound($"Trip with id {id} was not found.");
 
-        foundTrip.Title = updatedData.Title;
-        foundTrip.Description = updatedData.Description;
-        foundTrip.Location = updatedData.Location;
-        foundTrip.Start = updatedData.Start;
-        foundTrip.End = updatedData.End;
+        tripFromDatabase.Title = updatedData.Title;
+        tripFromDatabase.Description = updatedData.Description;
+        tripFromDatabase.Location = updatedData.Location;
+        tripFromDatabase.Start = updatedData.Start;
+        tripFromDatabase.End = updatedData.End;
 
         await _context.SaveChangesAsync();
         return Ok($"Trip data (id {id}) successfully updated.");
@@ -64,12 +64,12 @@ public class TripController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteTripById(int id)
     {
-        var foundTrip = await _context.Trips.FindAsync(id);
+        var tripFromDatabase = await _context.Trips.FindAsync(id);
 
-        if (foundTrip is null)
+        if (tripFromDatabase is null)
             return NotFound($"Trip with id {id} was not found");
 
-        _context.Trips.Remove(foundTrip);
+        _context.Trips.Remove(tripFromDatabase);
         await _context.SaveChangesAsync();
 
         return Ok($"Trip with id {id} successfully deleted");
