@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyTravelJournal.Api.Data;
 using MyTravelJournal.Api.DTOs;
 using MyTravelJournal.Api.Models;
@@ -44,7 +45,16 @@ public class UserController : ControllerBase
     [HttpPost("/api/login")]
     public async Task<IActionResult> Login(UserLoginDto request)
     {
-        return Ok("");
+        // Searching for user in database by his username.
+        var foundUser = await _context.Users.FirstOrDefaultAsync(user => user.Username == request.Username);
+        if (foundUser is null)
+            return NotFound("User not found.");
+
+        // Checks if the provided password corresponds to hash stored in the database.
+        if (!VerifyPasswordHash(request.Password, foundUser.PasswordHash, foundUser.PasswordSalt))
+            return NotFound("Incorrect password");
+
+        return Ok($"User {foundUser.Username} successfully logged in.");
     }
 
     /// <summary>
