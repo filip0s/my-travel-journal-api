@@ -13,11 +13,13 @@ public class UserController : ControllerBase
 {
     private readonly TravelJournalContext _context;
     private readonly IMapper _mapper;
+    private readonly IConfiguration _configuration;
 
-    public UserController(TravelJournalContext context, IMapper mapper)
+    public UserController(TravelJournalContext context, IMapper mapper, IConfiguration configuration)
     {
         _context = context;
         _mapper = mapper;
+        _configuration = configuration;
     }
 
 
@@ -75,5 +77,31 @@ public class UserController : ControllerBase
         var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
 
         return computedHash.SequenceEqual(passwordHash);
+    }
+
+    private string CreateToken(User user)
+    {
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Username)
+        };
+
+        var key = new SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+
+        var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+        // Expiration date is set to tomorrow
+        var expirationDate = DateTime.Now.AddDays(1);
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires: expirationDate,
+            signingCredentials: cred
+        );
+
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+        return jwt;
     }
 }
