@@ -47,7 +47,7 @@ public class UserController : ControllerBase
 
 
     [HttpPost("/api/login")]
-    public async Task<IActionResult> Login(UserLoginDto request)
+    public async Task<ActionResult<string>> Login(UserLoginDto request)
     {
         // Searching for user in database by his username.
         var userFromDatabase = await _context.Users.FirstOrDefaultAsync(user => user.Username == request.Username);
@@ -58,7 +58,11 @@ public class UserController : ControllerBase
         if (!VerifyPasswordHash(request.Password, userFromDatabase.PasswordHash, userFromDatabase.PasswordSalt))
             return NotFound("Incorrect password");
 
-        return Ok($"User {userFromDatabase.Username} successfully logged in.");
+        // Creates JWT token for particular user.
+        var token = CreateToken(userFromDatabase);
+
+        // Returns HTTP 200 with the JWT token.
+        return Ok(token);
     }
 
     /// <summary>
