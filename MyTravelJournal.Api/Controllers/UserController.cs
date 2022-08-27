@@ -18,6 +18,10 @@ public class UserController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IConfiguration _configuration;
 
+    // Constructor which is used for dependency injection
+    // context - database context
+    // mapper - configuration for AutoMapper
+    // configuration - used for fetching configuration values from `appsettings.json`
     public UserController(TravelJournalContext context, IMapper mapper, IConfiguration configuration)
     {
         _context = context;
