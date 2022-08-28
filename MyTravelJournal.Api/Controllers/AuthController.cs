@@ -20,14 +20,11 @@ public class AuthController : ControllerBase
     private readonly IConfiguration _configuration;
 
     // Constructor which is used for dependency injection
-    // context - database context
-    // mapper - configuration for AutoMapper
-    // configuration - used for fetching configuration values from `appsettings.json`
     public AuthController(TravelJournalContext context, IMapper mapper, IConfiguration configuration)
     {
-        _context = context;
-        _mapper = mapper;
-        _configuration = configuration;
+        _context = context; // database context
+        _mapper = mapper; // configuration for AutoMapper
+        _configuration = configuration; // fetching of configurations values stored in `appsettings.json`
     }
 
 
