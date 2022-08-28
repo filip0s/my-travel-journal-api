@@ -12,6 +12,7 @@ using MyTravelJournal.Api.Models;
 namespace MyTravelJournal.Api.Controllers;
 
 [ApiController]
+[Route("/api/auth")]
 public class AuthController : ControllerBase
 {
     private readonly TravelJournalContext _context;
@@ -30,7 +31,7 @@ public class AuthController : ControllerBase
     }
 
 
-    [HttpPost("/api/register")]
+    [HttpPost("register")]
     public async Task<IActionResult> Register(UserRegisterDto request)
     {
         if (_context.Users.Any(user => user.Username == request.Username))
@@ -50,7 +51,7 @@ public class AuthController : ControllerBase
     }
 
 
-    [HttpPost("/api/login")]
+    [HttpPost("login")]
     public async Task<ActionResult<string>> Login(UserLoginDto request)
     {
         // Searching for user in database by his username.
