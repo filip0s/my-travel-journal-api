@@ -12,7 +12,7 @@ using MyTravelJournal.Api.Models;
 namespace MyTravelJournal.Api.Controllers;
 
 [ApiController]
-public class UserController : ControllerBase
+public class AuthController : ControllerBase
 {
     private readonly TravelJournalContext _context;
     private readonly IMapper _mapper;
@@ -22,7 +22,7 @@ public class UserController : ControllerBase
     // context - database context
     // mapper - configuration for AutoMapper
     // configuration - used for fetching configuration values from `appsettings.json`
-    public UserController(TravelJournalContext context, IMapper mapper, IConfiguration configuration)
+    public AuthController(TravelJournalContext context, IMapper mapper, IConfiguration configuration)
     {
         _context = context;
         _mapper = mapper;
@@ -94,7 +94,7 @@ public class UserController : ControllerBase
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, user.Username)
+            new Claim(ClaimTypes.Name, user.Username),
         };
 
         var key = new SymmetricSecurityKey(
