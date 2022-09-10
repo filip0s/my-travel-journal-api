@@ -1,3 +1,5 @@
+using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyTravelJournal.Api.Data;
@@ -11,10 +13,12 @@ namespace MyTravelJournal.Api.Controllers;
 public class TripController : ControllerBase
 {
     private readonly TravelJournalContext _context;
+    private readonly IMapper _mapper;
 
-    public TripController(TravelJournalContext context)
+    public TripController(TravelJournalContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     [HttpGet]
