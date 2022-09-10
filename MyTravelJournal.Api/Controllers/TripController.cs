@@ -44,18 +44,14 @@ public class TripController : ControllerBase
     }
 
     [HttpPatch("{id:int}")]
-    public async Task<ActionResult> UpdateTripById(int id, [FromBody] TripUpdateDto updatedData)
+    public async Task<ActionResult> UpdateTripById(int id, JsonPatchDocument<Trip> request)
     {
         var tripFromDatabase = await _context.Trips.FindAsync(id);
 
         if (tripFromDatabase is null)
             return NotFound($"Trip with id {id} was not found.");
 
-        tripFromDatabase.Title = updatedData.Title;
-        tripFromDatabase.Description = updatedData.Description;
-        tripFromDatabase.Location = updatedData.Location;
-        tripFromDatabase.Start = updatedData.Start;
-        tripFromDatabase.End = updatedData.End;
+        request.ApplyTo(tripFromDatabase);
 
         await _context.SaveChangesAsync();
         return Ok($"Trip data (id {id}) successfully updated.");

@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddDbContext<TravelJournalContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
-});
+}).AddSwaggerGenNewtonsoftSupport();
 builder.Services.AddCors(options => options.AddPolicy(name: "MyTravelJournalOrigins",
     policy => policy
         .WithOrigins("http://localhost:3001")
